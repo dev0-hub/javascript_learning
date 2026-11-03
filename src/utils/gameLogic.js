@@ -5,13 +5,14 @@ export const levelProgress = (xp) => xp % XP_PER_LEVEL; // XP earned inside curr
 
 export const defaultState = {
   name: 'Learner',
+  language: 'my',
   theme: 'dark',
   xp: 0,
   correct: {},   // { questionId: true } -> XP is only given the first time
   wrong: 0,
   solved: {},    // { challengeId: true }
   lessons: {},   // { lessonId: true }
-  syntax: { seen: {}, cleared: {}, bestStreak: 0, rounds: 0 }, // Syntax Master progress
+  syntax: { mode: 'mixed', seen: {}, cleared: {}, bestStreak: 0, rounds: 0 }, // Syntax Master progress
 };
 
 export const rankTitle = (level) =>
