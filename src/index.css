@@ -73,7 +73,7 @@ h2 { font-size:1.1rem; margin:1.4rem 0 .6rem; }
 .chips { display:flex; flex-wrap:wrap; gap:.6rem; margin:.5rem 0 1rem; }
 .chip { padding:.55rem 1rem; background:var(--bg); color:var(--text); border:1px solid var(--line); border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:1rem; touch-action:none; user-select:none; }
 .chip:hover:not(:disabled) { border-color:var(--accent); } .chip.sel { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); } .chip.used { opacity:.3; }
-.ghost { position:fixed; transform:translate(-50%,-120%); padding:.5rem 1rem; background:var(--accent); color:var(--on-accent); border-radius:8px; font-family:'JetBrains Mono',monospace; pointer-events:none; z-index:50; }
+.drag-preview { position:fixed; transform:translate(-50%,-120%); padding:.5rem 1rem; background:var(--accent); color:var(--on-accent); border-radius:8px; font-family:'JetBrains Mono',monospace; pointer-events:none; z-index:50; }
 .mode { text-align:left; display:flex; flex-direction:column; gap:.3rem; color:var(--text); font:inherit; }
 .mode.active { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); }
 .feedback { margin-top:1rem; padding:1rem; border-radius:10px; border:1px solid var(--line); }
