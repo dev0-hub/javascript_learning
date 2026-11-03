@@ -10,11 +10,14 @@ import Achievements from './pages/Achievements.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
 import Profile from './pages/Profile.jsx';
 import Settings from './pages/Settings.jsx';
+import TechDictionary from './pages/TechDictionary.jsx';
+import { LanguageProvider } from './i18n/LanguageContext.jsx';
+import { translate } from './i18n/translations.js';
 import { defaultState } from './utils/gameLogic.js';
 import { loadState, saveState, clearState } from './utils/storage.js';
 
 const PAGES = { dashboard: Dashboard, roadmap: Roadmap, quiz: QuizArena, challenges: CodingChallenge, syntax: SyntaxMaster,
-  achievements: Achievements, leaderboard: Leaderboard, profile: Profile, settings: Settings };
+  achievements: Achievements, leaderboard: Leaderboard, profile: Profile, settings: Settings, dictionary: TechDictionary };
 
 export default function App() {
   // useState keeps data React re-renders from. The initial value comes from LocalStorage.
@@ -23,7 +26,12 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Save after every change and apply the theme.
-  useEffect(() => { saveState(state); document.documentElement.dataset.theme = state.theme; }, [state]);
+  useEffect(() => {
+    saveState(state);
+    document.documentElement.dataset.theme = state.theme;
+    document.documentElement.lang = state.language === 'en' ? 'en' : 'my';
+    document.title = translate(state.language, 'pageTitle');
+  }, [state]);
 
   // Game actions. They use the "updater" form setState(s => ...) so they always see the latest state.
   const actions = {
@@ -52,12 +60,14 @@ export default function App() {
   const Page = PAGES[page];
 
   return (
-    <div className="layout">
-      <Sidebar page={page} onNavigate={go} open={menuOpen} />
-      <div className="main">
-        <Navbar state={state} onMenu={() => setMenuOpen((o) => !o)} />
-        <main className="content"><Page state={state} actions={actions} go={go} /></main>
+    <LanguageProvider language={state.language === 'en' ? 'en' : 'my'} onLanguageChange={(language) => actions.update({ language })}>
+      <div className="layout">
+        <Sidebar page={page} onNavigate={go} open={menuOpen} />
+        <div className="main">
+          <Navbar state={state} onMenu={() => setMenuOpen((o) => !o)} onLanguageChange={(language) => actions.update({ language })} />
+          <main className="content"><Page state={state} actions={actions} go={go} /></main>
+        </div>
       </div>
-    </div>
+    </LanguageProvider>
   );
 }
