@@ -4,19 +4,21 @@ import DashboardCard from '../components/DashboardCard.jsx';
 import ProgressBar from '../components/ProgressBar.jsx';
 import { syntaxQuestions } from '../data/syntaxQuestions.js';
 import { pickRound, calcReward, ORDER } from '../utils/syntaxLogic.js';
+import { useLanguage } from '../i18n/LanguageContext.jsx';
 
 const MODES = [
-  ['mixed', '🎲', 'Mixed Challenge', 'All four modes, 10 questions'],
-  ['fill', '✏️', 'Fill in the Blanks', 'Pick the missing character'],
-  ['keyword', '🔑', 'Missing Keywords', 'Pick the missing keyword'],
-  ['symbol', '➕', 'Operators & Symbols', 'Pick the missing operator or symbol'],
-  ['drag', '🧩', 'Drag & Drop Puzzle', 'Fill several blanks'],
+  ['mixed', '🎲', 'mixedChallenge', 'allFourModes'],
+  ['fill', '✏️', 'fillBlanks', 'missingCharacter'],
+  ['keyword', '🔑', 'missingKeywords', 'pickKeyword'],
+  ['symbol', '➕', 'operatorsSymbols', 'pickOperator'],
+  ['drag', '🧩', 'dragDrop', 'fillSeveralBlanks'],
 ];
 
 export default function SyntaxMaster({ state, actions }) {
+  const { t } = useLanguage();
   const sx = state.syntax;
   const [stage, setStage] = useState('menu'); // menu | play | done
-  const [cfg, setCfg] = useState({ mode: 'mixed', difficulty: 'Easy', seconds: 30 });
+  const [cfg, setCfg] = useState({ mode: state.syntax.mode ?? 'mixed', difficulty: 'Easy', seconds: 30 });
   const [round, setRound] = useState([]);
   const [idx, setIdx] = useState(0);
   const [stats, setStats] = useState({ correct: 0, xp: 0, streak: 0, best: 0 });
@@ -42,8 +44,8 @@ export default function SyntaxMaster({ state, actions }) {
     return (
       <>
         <div className="row space wrap">
-          <h1>Syntax Master</h1>
-          <span className="muted">Question {idx + 1}/{round.length} · 🔥 {stats.streak} · {stats.xp} XP</span>
+          <h1>{t('syntax')}</h1>
+          <span className="muted">{t('question')} {idx + 1}/{round.length} · 🔥 {stats.streak} · {stats.xp} XP</span>
         </div>
         <ProgressBar value={idx} max={round.length} />
         <div className="top"><SyntaxChallenge key={round[idx].id} q={round[idx]} seconds={cfg.seconds} onAnswer={onAnswer} onNext={next} isLast={idx + 1 === round.length} /></div>
@@ -56,44 +58,45 @@ export default function SyntaxMaster({ state, actions }) {
     const nextLevel = ORDER[ORDER.indexOf(cfg.difficulty) + 1];
     return (
       <div className="card stack pop">
-        <h1>{passed ? '🏆 Round complete!' : 'Round finished'}</h1>
-        <p>Score: <strong>{stats.correct}/{round.length}</strong> ({pct}%) · XP earned: <strong>{stats.xp}</strong> · Best streak: <strong>{stats.best}</strong></p>
-        <p>{passed ? (nextLevel ? `${cfg.difficulty} cleared! ${nextLevel} is unlocked.` : 'Hard cleared. You are a Syntax Master!') : 'Score 60% or more to clear this level. Try again with hints.'}</p>
-        <div className="row wrap"><button className="btn" onClick={start}>Play again</button><button className="btn ghost" onClick={() => setStage('menu')}>Back to menu</button></div>
+        <h1>{passed ? `🏆 ${t('roundComplete')}` : t('roundFinished')}</h1>
+        <p>{t('score')}: <strong>{stats.correct}/{round.length}</strong> ({pct}%) · {t('xp')}: <strong>{stats.xp}</strong> · {t('bestStreakResult')}: <strong>{stats.best}</strong></p>
+        <p>{passed ? (nextLevel ? `${t(nextLevel.toLowerCase())} ${t('clearedUnlocked')}` : t('hardCleared')) : t('passLevel')}</p>
+        <div className="row wrap"><button className="btn" onClick={start}>{t('playAgain')}</button><button className="btn ghost" onClick={() => setStage('menu')}>{t('backToMenu')}</button></div>
       </div>
     );
   }
   return (
     <>
-      <h1>Syntax Master</h1>
-      <p className="muted">Complete the code. Correct answers earn XP, streaks earn bonuses, and clearing a level unlocks the next.</p>
+      <h1>{t('syntax')}</h1>
+      <p className="muted">{t('completeCode')}</p>
       <div className="grid">
-        <DashboardCard title="Rounds played" value={sx.rounds} />
-        <DashboardCard title="Best streak" value={sx.bestStreak} hint="🔥 in a row" />
-        <DashboardCard title="Questions seen" value={Object.keys(sx.seen).length} hint={`of ${syntaxQuestions.length}`} />
+        <DashboardCard title={t('roundsPlayed')} value={sx.rounds} />
+        <DashboardCard title={t('bestStreak')} value={sx.bestStreak} hint={`🔥 ${t('inARow')}`} />
+        <DashboardCard title={t('questionsSeen')} value={Object.keys(sx.seen).length} hint={`${t('of')} ${syntaxQuestions.length}`} />
       </div>
-      <h2>1. Choose a game mode</h2>
+      <h2>{t('chooseMode')}</h2>
       <div className="grid">
         {MODES.map(([id, icon, name, desc]) => (
-          <button key={id} className={`card mode ${cfg.mode === id ? 'active' : ''}`} onClick={() => setCfg({ ...cfg, mode: id })}>
-            <span className="badge-icon">{icon}</span><strong>{name}</strong><span className="muted small">{desc}</span>
+          <button key={id} className={`card mode ${cfg.mode === id ? 'active' : ''}`}
+            onClick={() => { setCfg({ ...cfg, mode: id }); actions.update({ syntax: { ...state.syntax, mode: id } }); }}>
+            <span className="badge-icon">{icon}</span><strong>{t(name)}</strong><span className="muted small">{t(desc)}</span>
           </button>
         ))}
       </div>
-      <h2>2. Difficulty</h2>
+      <h2>2. {t('difficulty')}</h2>
       <div className="row wrap">
         {ORDER.map((d) => (
           <button key={d} disabled={!unlocked(d)} className={`btn ${cfg.difficulty === d ? '' : 'ghost'}`} onClick={() => setCfg({ ...cfg, difficulty: d })}>
-            {unlocked(d) ? '' : '🔒 '}{d}{sx.cleared[d] ? ' ✔' : ''}
+            {unlocked(d) ? '' : '🔒 '}{t(d.toLowerCase())}{sx.cleared[d] ? ' ✔' : ''}
           </button>
         ))}
       </div>
-      <p className="muted small">Easy: variables, data types, semicolons · Medium: operators, conditions, loops, functions · Hard: arrays, objects, DOM. Clear a level with 60%+ to unlock the next.</p>
-      <h2>3. Timer</h2>
+      <p className="muted small">{t('difficultyGuide')}</p>
+      <h2>3. {t('timer')}</h2>
       <div className="row">
-        {[15, 30].map((s) => <button key={s} className={`btn ${cfg.seconds === s ? '' : 'ghost'}`} onClick={() => setCfg({ ...cfg, seconds: s })}>{s} seconds</button>)}
+        {[15, 30].map((s) => <button key={s} className={`btn ${cfg.seconds === s ? '' : 'ghost'}`} onClick={() => setCfg({ ...cfg, seconds: s })}>{s} {t('seconds')}</button>)}
       </div>
-      <div className="top"><button className="btn" onClick={start}>Start game</button></div>
+      <div className="top"><button className="btn" onClick={start}>{t('startGame')}</button></div>
     </>
   );
 }
