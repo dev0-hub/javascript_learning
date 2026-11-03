@@ -2,9 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import CodeBlock from './CodeBlock.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import { shuffle, fillCode, isValidSyntax } from '../utils/syntaxLogic.js';
+import { getSyntaxQuestionContent } from '../data/syntaxQuestionTranslations.js';
+import { useLanguage } from '../i18n/LanguageContext.jsx';
 
 // One question for any of the 4 modes. Single-blank modes answer on click; drag mode has a Check button.
 export default function SyntaxChallenge({ q, seconds, onAnswer, onNext, isLast }) {
+  const { language, t } = useLanguage();
+  const content = getSyntaxQuestionContent(q, language);
   const isDrag = q.mode === 'drag';
   const chips = useMemo(() => shuffle([...q.answers, ...q.distractors].map((text, id) => ({ id, text }))), [q]);
   const [slots, setSlots] = useState(() => Array(q.answers.length).fill(null)); // chip ids per blank
@@ -67,12 +71,12 @@ export default function SyntaxChallenge({ q, seconds, onAnswer, onNext, isLast }
   return (
     <div className={`card ${result ? (result.correct ? 'pop' : 'shake') : ''}`}>
       <div className="row space wrap">
-        <span><span className={`tag ${q.difficulty.toLowerCase()}`}>{q.difficulty}</span> <span className="tag">{q.mode}</span></span>
-        <button className="btn ghost" disabled={hint || !!result} onClick={() => setHint(true)}>💡 Hint (half XP)</button>
+        <span><span className={`tag ${q.difficulty.toLowerCase()}`}>{t(q.difficulty.toLowerCase())}</span> <span className="tag">{t(modeKeys[q.mode])}</span></span>
+        <button className="btn ghost" disabled={hint || !!result} onClick={() => setHint(true)}>💡 {t('hint')}</button>
       </div>
       <ProgressBar label="⏱ Time left" value={left} max={seconds} />
       <CodeBlock code={q.code} renderSlot={renderSlot} />
-      {hint && <p className="callout"><strong>Hint:</strong> {q.hint}</p>}
+      {hint && <p className="callout"><strong>{t('hintLabel')}:</strong> {content.hint}</p>}
       <div className="chips">
         {chips.map((c) => {
           const used = slots.includes(c.id);
@@ -89,18 +93,19 @@ export default function SyntaxChallenge({ q, seconds, onAnswer, onNext, isLast }
           );
         })}
       </div>
-      {isDrag && !result && <p className="muted small">Drag a piece into a blank, or tap a piece then tap a blank. Tap a filled blank to remove it.</p>}
-      {isDrag && !result && <button className="btn" disabled={slots.includes(null)} onClick={() => finish(slots)}>Check answer</button>}
+      {isDrag && !result && <p className="muted small">{t('dragHelp')}</p>}
+      {isDrag && !result && <button className="btn" disabled={slots.includes(null)} onClick={() => finish(slots)}>{t('checkAnswer')}</button>}
       {ghost && <div className="drag-preview" style={{ left: ghost.x, top: ghost.y }}>{textOf(ghost.id)}</div>}
       {result && (
         <div className={`feedback ${result.correct ? 'good' : 'bad'}`}>
-          <strong>{result.correct ? `✔ Correct! +${result.gained + result.bonus} XP` : result.timeout ? "✘ Time's up!" : '✘ Not quite, no XP this time.'}</strong>
-          {result.bonus > 0 && <div>🔥 Streak bonus +{result.bonus} XP ({result.streak} in a row)</div>}
-          {!result.correct && <div>Correct answer: <code>{q.answers.join('  ')}</code></div>}
-          <p>{q.explanation}</p>
-          <button className="btn" onClick={onNext}>{isLast ? 'Finish round' : 'Next challenge'}</button>
+          <strong>{result.correct ? `✔ ${t('correct')} +${result.gained + result.bonus} ${t('xp')}` : result.timeout ? `✘ ${t('timeUp')}` : `✘ ${t('noXp')}`}</strong>
+          {result.bonus > 0 && <div>🔥 {t('streakBonus')} +{result.bonus} XP ({result.streak} {t('inARow')})</div>}
+          {!result.correct && <div>{t('answer')} <code>{q.answers.join('  ')}</code></div>}
+          <p>{content.explanation}</p>
+          <button className="btn" onClick={onNext}>{isLast ? t('finishRound') : t('nextChallenge')}</button>
         </div>
       )}
     </div>
   );
 }
+const modeKeys = { fill: 'fillBlanks', keyword: 'missingKeywords', symbol: 'operatorsSymbols', drag: 'dragDrop' };
