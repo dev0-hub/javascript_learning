@@ -91,7 +91,7 @@ export default function SyntaxChallenge({ q, seconds, onAnswer, onNext, isLast }
       </div>
       {isDrag && !result && <p className="muted small">Drag a piece into a blank, or tap a piece then tap a blank. Tap a filled blank to remove it.</p>}
       {isDrag && !result && <button className="btn" disabled={slots.includes(null)} onClick={() => finish(slots)}>Check answer</button>}
-      {ghost && <div className="ghost" style={{ left: ghost.x, top: ghost.y }}>{textOf(ghost.id)}</div>}
+      {ghost && <div className="drag-preview" style={{ left: ghost.x, top: ghost.y }}>{textOf(ghost.id)}</div>}
       {result && (
         <div className={`feedback ${result.correct ? 'good' : 'bad'}`}>
           <strong>{result.correct ? `✔ Correct! +${result.gained + result.bonus} XP` : result.timeout ? "✘ Time's up!" : '✘ Not quite, no XP this time.'}</strong>
