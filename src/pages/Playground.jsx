@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
+import useWorkspaceFullscreen from '../hooks/useWorkspaceFullscreen.js';
 
 // Text for this page (English / Myanmar).
 const TEXT = {
   en: { title: 'Live Playground', intro: 'Write HTML, CSS and JavaScript on the left. See the real web page on the right, exactly like a website would show it.',
     run: 'Run', reset: 'Reset', auto: 'Auto-run while typing', templates: 'Load an example…', code: 'Code', result: 'Result', console: 'Console',
-    empty: 'console.log() messages and errors appear here.', tip: 'Tip: change a word, a colour or a number in the code and watch the result change.' },
+    empty: 'console.log() messages and errors appear here.', tip: 'Tip: change a word, a colour or a number in the code and watch the result change.',
+    fullscreen: 'Fullscreen', exitFullscreen: 'Exit fullscreen' },
   my: { title: 'တိုက်ရိုက် Code စမ်းသပ်ခန်း', intro: 'ဘယ်ဘက်တွင် HTML, CSS, JavaScript ရေးပါ။ ညာဘက်တွင် ဝဘ်စာမျက်နှာ၏ ရလဒ်ကို တိုက်ရိုက်ကြည့်ပါ။',
     run: 'Run', reset: 'မူလအတိုင်း', auto: 'ရေးနေစဉ် အလိုအလျောက် Run', templates: 'ဥပမာတစ်ခု ရွေးပါ…', code: 'Code', result: 'ရလဒ်', console: 'Console',
-    empty: 'console.log() စာများနှင့် အမှားများ ဤနေရာတွင် ပေါ်မည်။', tip: 'အကြံ: Code ထဲက စာလုံး၊ အရောင် သို့မဟုတ် ကိန်းဂဏန်းကို ပြောင်းပြီး ရလဒ်ပြောင်းသည်ကို ကြည့်ပါ။' },
+    empty: 'console.log() စာများနှင့် အမှားများ ဤနေရာတွင် ပေါ်မည်။', tip: 'အကြံ: Code ထဲက စာလုံး၊ အရောင် သို့မဟုတ် ကိန်းဂဏန်းကို ပြောင်းပြီး ရလဒ်ပြောင်းသည်ကို ကြည့်ပါ။',
+    fullscreen: 'မျက်နှာပြင်အပြည့်', exitFullscreen: 'မျက်နှာပြင်အပြည့်မှ ထွက်ရန်' },
 };
 
 const TEMPLATES = [
@@ -107,6 +110,7 @@ export default function Playground({ state, actions }) {
   const [tab, setTab] = useState('code'); // small screens show one pane at a time
   const [logs, setLogs] = useState([]);
   const frame = useRef(null);
+  const { fullscreen, toggleFullscreen } = useWorkspaceFullscreen();
 
   const runNow = (c = code) => setRun((r) => ({ code: c, n: r.n + 1 }));
 
@@ -131,9 +135,9 @@ export default function Playground({ state, actions }) {
   const load = (id) => { const tpl = TEMPLATES.find((x) => x.id === id); if (tpl) { setCode(tpl.code); runNow(tpl.code); } };
 
   return (
-    <>
+    <div className={`workspace${fullscreen ? ' workspace-fullscreen' : ''}`}>
       <h1>{T.title}</h1>
-      <p className="muted">{T.intro}</p>
+      {!fullscreen && <p className="muted">{T.intro}</p>}
       <div className="row wrap">
         <select className="input" value="" aria-label={T.templates} onChange={(e) => load(e.target.value)}>
           <option value="">{T.templates}</option>
@@ -142,6 +146,8 @@ export default function Playground({ state, actions }) {
         <button className="btn" onClick={() => runNow()}>▶ {T.run}</button>
         <button className="btn ghost" onClick={() => load('date')}>{T.reset}</button>
         <label className="row small"><input type="checkbox" checked={auto} onChange={(e) => setAuto(e.target.checked)} /> {T.auto}</label>
+        <button className="btn ghost workspace-fullscreen-toggle" onClick={toggleFullscreen}
+          aria-pressed={fullscreen}>{fullscreen ? T.exitFullscreen : T.fullscreen}</button>
       </div>
       <div className="pg-tabs">
         <button className={`btn ${tab === 'code' ? '' : 'ghost'}`} onClick={() => setTab('code')}>{T.code}</button>
@@ -168,7 +174,7 @@ export default function Playground({ state, actions }) {
           <pre className="output pg-console">{logs.length ? logs.map((l, i) => <div key={i} className={l.t === 'err' ? 'log-err' : ''}>{l.t === 'err' ? '✘ ' : '› '}{l.m}</div>) : <span className="muted">{T.empty}</span>}</pre>
         </section>
       </div>
-      <p className="muted small top">{T.tip}</p>
-    </>
+      {!fullscreen && <p className="muted small top">{T.tip}</p>}
+    </div>
   );
 }

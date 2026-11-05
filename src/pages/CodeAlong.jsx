@@ -3,6 +3,7 @@ import { useLanguage } from '../i18n/LanguageContext.jsx';
 import GhostEditor from '../components/GhostEditor.jsx';
 import ProgressBar from '../components/ProgressBar.jsx';
 import { demoSites, siteCode } from '../data/demoSites.js';
+import useWorkspaceFullscreen from '../hooks/useWorkspaceFullscreen.js';
 
 const TEXT = {
   en: {
@@ -13,6 +14,7 @@ const TEXT = {
     typeHere: 'Click the code and start typing the faint text. Press Tab to accept a whole line.',
     finished: 'Design built!', again: 'Already completed, so no extra XP this time.',
     helped: 'You used ghost help, so the reward is smaller. Try typing every line yourself!', level: 'Level',
+    fullscreen: 'Fullscreen', exitFullscreen: 'Exit fullscreen',
   },
   my: {
     title: 'အတူတူ Code ရေးခြင်း',
@@ -22,6 +24,7 @@ const TEXT = {
     line: 'စာကြောင်း', typeHere: 'Code ကို နှိပ်ပြီး မှေးမှေးမြင်ရသော စာကို စရိုက်ပါ။ တစ်ကြောင်းလုံး လက်ခံရန် Tab နှိပ်ပါ။',
     finished: 'ဒီဇိုင်း တည်ဆောက်ပြီးပါပြီ!', again: 'ယခင်က ပြီးပြီးဖြစ်၍ XP ထပ်မရပါ။',
     helped: 'အကူအညီ သုံးထားသဖြင့် ဆုလာဘ် နည်းပါသည်။ နောက်တစ်ခါ ကိုယ်တိုင်အကုန်ရိုက်ကြည့်ပါ!', level: 'အဆင့်',
+    fullscreen: 'မျက်နှာပြင်အပြည့်', exitFullscreen: 'မျက်နှာပြင်အပြည့်မှ ထွက်ရန်',
   },
 };
 
@@ -32,6 +35,7 @@ export default function CodeAlong({ state, actions }) {
   const [typed, setTyped] = useState('');
   const [assists, setAssists] = useState(0);
   const [reward, setReward] = useState(null);
+  const { fullscreen, toggleFullscreen } = useWorkspaceFullscreen();
   const paid = useRef(false);
   const doneMap = state.codealong || {};
 
@@ -103,10 +107,12 @@ export default function CodeAlong({ state, actions }) {
   const explanation = site.lines[Math.min(lineNumber, site.lines.length - 1)];
 
   return (
-    <>
+    <div className={`workspace${fullscreen ? ' workspace-fullscreen' : ''}`}>
       <div className="row space wrap">
         <button className="btn ghost" onClick={() => setSite(null)}>{T.back}</button>
         <h1>{site.icon} {site.name[language] ?? site.name.en}</h1>
+        <button className="btn ghost workspace-fullscreen-toggle" onClick={toggleFullscreen}
+          aria-pressed={fullscreen}>{fullscreen ? T.exitFullscreen : T.fullscreen}</button>
       </div>
       <ProgressBar label={T.progress} value={correctPrefix} max={target.length} />
       <div className="pg top">
@@ -135,6 +141,6 @@ export default function CodeAlong({ state, actions }) {
         </section>
       </div>
       {!finished && !typed && <p className="muted small top">{T.typeHere}</p>}
-    </>
+    </div>
   );
 }

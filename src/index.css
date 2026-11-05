@@ -41,6 +41,13 @@ button { font:inherit; cursor:pointer; }
 .ghost-input { position:absolute; inset:0; width:100%; height:100%; opacity:0; border:0; resize:none; cursor:text; }
 .thumb { height:150px; overflow:hidden; border:1px solid var(--line); border-radius:8px; background:#fff; pointer-events:none; }
 .thumb iframe { width:640px; height:360px; border:0; transform:scale(.45); transform-origin:top left; }
+.workspace-fullscreen { position:fixed; z-index:1000; inset:0; display:flex; flex-direction:column; width:100%; height:100vh; height:100dvh; max-width:none; padding:1rem; overflow:auto; background:var(--bg); }
+.workspace-fullscreen .pg { flex:1; min-height:0; margin-top:.75rem; }
+.workspace-fullscreen .pg-pane { min-height:0; }
+.workspace-fullscreen .pg-code { min-height:0; height:100%; resize:none; }
+.workspace-fullscreen .pg-frame { flex:1; min-height:0; height:auto; }
+.workspace-fullscreen .ghost-ed { flex:1; min-height:0; }
+.workspace-fullscreen .hide-sm { display:flex; }
 .hero { padding:1.5rem 0 1.25rem; }
 .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:1rem; margin:1rem 0; }
 .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.1rem; }
@@ -92,6 +99,9 @@ button { font:inherit; cursor:pointer; }
   .pg-tabs { display:flex; }
   .hide-sm { display:none; }
   .pg-code { min-height:360px; }
+  .workspace-fullscreen .pg { grid-template-columns:1fr; overflow:auto; }
+  .workspace-fullscreen .pg-pane { min-height:45vh; }
+  .workspace-fullscreen .pg-code { min-height:0; }
   .navbar { gap:.6rem; padding:.75rem; }
   .language-select select { max-width:130px; }
 }
