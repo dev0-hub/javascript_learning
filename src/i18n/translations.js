@@ -2,7 +2,7 @@ export const translations = {
   en: {
     pageTitle: 'JS Quest – Learn JavaScript by playing',
     dashboard: 'Dashboard', roadmap: 'Learning Roadmap', quiz: 'Quiz Arena', challenges: 'Coding Challenges',
-    syntax: 'Syntax Master', playground: 'Live Playground', achievements: 'Achievements', leaderboard: 'Leaderboard', profile: 'My Profile',
+    syntax: 'Syntax Master', playground: 'Live Playground', codealong: 'Code Along', achievements: 'Achievements', leaderboard: 'Leaderboard', profile: 'My Profile',
     settings: 'Settings', dictionary: 'Tech Dictionary', languageRegion: 'Language & Region',
     chooseLanguage: 'Choose one preferred language. Your choice is saved on this device.',
     myanmarLanguage: 'Myanmar', englishLanguage: 'English', displayName: 'Display name',
@@ -73,7 +73,7 @@ export const translations = {
   my: {
     pageTitle: 'JS Quest – ကစားရင်း JavaScript လေ့လာရန်',
     dashboard: 'ပင်မစာမျက်နှာ', roadmap: 'သင်ယူမှုလမ်းကြောင်း', quiz: 'မေးခွန်းဂိမ်း', challenges: 'လက်တွေ့စိန်ခေါ်မှုများ',
-    syntax: 'Code ရေးသားခြင်း', playground: 'Code စမ်းသပ်ခန်း', achievements: 'အောင်မြင်မှုများ', leaderboard: 'အမှတ်စာရင်း', profile: 'ကိုယ်ရေးအချက်အလက်',
+    syntax: 'Code ရေးသားခြင်း', playground: 'Code စမ်းသပ်ခန်း', codealong: 'အတူတူ Code ရေးခြင်း', achievements: 'အောင်မြင်မှုများ', leaderboard: 'အမှတ်စာရင်း', profile: 'ကိုယ်ရေးအချက်အလက်',
     settings: 'ဆက်တင်များ', dictionary: 'နည်းပညာဝေါဟာရ', languageRegion: 'ဘာသာစကားနှင့် ဒေသ',
     chooseLanguage: 'နှစ်သက်ရာ ဘာသာစကားတစ်ခုကို ရွေးပါ။ ဒီစက်ထဲမှာ မှတ်ထားပါမယ်။',
     myanmarLanguage: 'မြန်မာဘာသာ', englishLanguage: 'အင်္ဂလိပ်ဘာသာ', displayName: 'ပြသမည့်အမည်',

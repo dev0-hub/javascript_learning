@@ -2,7 +2,7 @@ import { useLanguage } from '../i18n/LanguageContext.jsx';
 
 export const NAV = [
   ['dashboard', 'dashboard', '🏠'], ['roadmap', 'roadmap', '🗺️'], ['quiz', 'quiz', '⚔️'],
-  ['challenges', 'challenges', '💻'], ['syntax', 'syntax', '🧩'], ['playground', 'playground', '🎨'], ['achievements', 'achievements', '🏆'],
+  ['challenges', 'challenges', '💻'], ['syntax', 'syntax', '🧩'], ['playground', 'playground', '🎨'], ['codealong', 'codealong', '👻'], ['achievements', 'achievements', '🏆'],
   ['leaderboard', 'leaderboard', '📊'], ['profile', 'profile', '👤'], ['dictionary', 'dictionary', '📖'],
   ['settings', 'settings', '⚙️'],
 ];

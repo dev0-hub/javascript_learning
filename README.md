@@ -13,8 +13,10 @@ or separate server-side user profiles.
 The Roadmap contains structured bilingual lessons, Quiz Arena includes
 multiple-choice, true/false, guess-the-output, and find-the-error questions, and
 Syntax Master includes fill-in-the-blank, missing-keyword, missing-symbol, and
-drag-and-drop code puzzles. Tech Dictionary contains searchable English–
-Myanmar JavaScript terms.
+drag-and-drop code puzzles. Code Along provides guided, line-by-line practice
+building demo websites, while Live Playground lets learners experiment with
+HTML, CSS, and JavaScript. Tech Dictionary contains searchable English–Myanmar
+JavaScript terms.
 
 Add multiple-choice questions in `src/data/questions.js` and keep their Myanmar
 translations in `src/data/questionTranslations.js`. Lesson content, syntax

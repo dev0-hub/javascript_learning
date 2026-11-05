@@ -14,6 +14,7 @@ export const defaultState = {
   lessons: {},   // { lessonId: true }
   syntax: { mode: 'mixed', seen: {}, cleared: {}, bestStreak: 0, rounds: 0 }, // Syntax Master progress
   playground: '',
+  codealong: {},
 };
 
 export const rankTitle = (level) =>

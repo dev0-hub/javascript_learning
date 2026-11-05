@@ -7,6 +7,7 @@ import QuizArena from './pages/QuizArena.jsx';
 import CodingChallenge from './pages/CodingChallenge.jsx';
 import SyntaxMaster from './pages/SyntaxMaster.jsx';
 import Playground from './pages/Playground.jsx';
+import CodeAlong from './pages/CodeAlong.jsx';
 import Achievements from './pages/Achievements.jsx';
 import Leaderboard from './pages/Leaderboard.jsx';
 import Profile from './pages/Profile.jsx';
@@ -17,7 +18,7 @@ import { translate } from './i18n/translations.js';
 import { defaultState } from './utils/gameLogic.js';
 import { loadState, saveState, clearState } from './utils/storage.js';
 
-const PAGES = { dashboard: Dashboard, roadmap: Roadmap, quiz: QuizArena, challenges: CodingChallenge, syntax: SyntaxMaster, playground: Playground,
+const PAGES = { dashboard: Dashboard, roadmap: Roadmap, quiz: QuizArena, challenges: CodingChallenge, syntax: SyntaxMaster, playground: Playground, codealong: CodeAlong,
   achievements: Achievements, leaderboard: Leaderboard, profile: Profile, settings: Settings, dictionary: TechDictionary };
 
 export default function App() {
@@ -52,6 +53,11 @@ export default function App() {
     syntaxFinish(level, pct, streak) {
       setState((s) => ({ ...s, syntax: { ...s.syntax, rounds: s.syntax.rounds + 1, bestStreak: Math.max(s.syntax.bestStreak, streak),
         cleared: pct >= 0.6 ? { ...s.syntax.cleared, [level]: true } : s.syntax.cleared } }));
+    },
+    completeCodeAlong(id, xp) {
+      setState((s) => s.codealong[id]
+        ? s
+        : { ...s, xp: s.xp + xp, codealong: { ...s.codealong, [id]: true } });
     },
     update(patch) { setState((s) => ({ ...s, ...patch })); },
     reset() { clearState(); setState({ ...defaultState }); },
